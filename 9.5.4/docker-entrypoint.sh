@@ -1,4 +1,4 @@
-#!/bin/sh
+#!#!/usr/local/bin/dumb-init /bin/sh
 chown -R postgres "$PGDATA"
 
 if [ -z "$(ls -A "$PGDATA")" ]; then

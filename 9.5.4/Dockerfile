@@ -1,6 +1,8 @@
 FROM alpine:3.4
 
-ENV GOSU_VERSION 1.9
+ENV GOSU_VERSION=1.9 \
+ LANG=en_US.utf8 \
+ PGDATA=/var/lib/postgresql/data
 
 RUN set -x \
  && apk update && apk add  --no-cache --virtual .gosu-deps dpkg gnupg openssl musl-dev make gcc curl \
@@ -19,13 +21,10 @@ RUN set -x \
  && apk del .gosu-deps \
  && rm -rf /var/cache/apk/*
 
-ENV LANG en_US.utf8
-ENV PGDATA /var/lib/postgresql/data
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 VOLUME /var/lib/postgresql/data
 
-COPY docker-entrypoint.sh /
+EXPOSE 5432
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
-EXPOSE 5432
 CMD ["postgres"]

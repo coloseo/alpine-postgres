@@ -1,4 +1,10 @@
 #!/usr/local/bin/dumb-init /bin/sh
+# Original: https://github.com/docker-library/postgres/blob/master/9.3/docker-entrypoint.sh
+if [ ! -d  "$PGDATA" ]; then
+    mkdir -p "$PGDATA"
+    chmod 700 "$PGDATA"
+fi
+
 chown -R postgres "$PGDATA"
 
 if [ -z "$(ls -A "$PGDATA")" ]; then

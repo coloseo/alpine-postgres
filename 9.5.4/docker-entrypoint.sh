@@ -4,7 +4,7 @@ if [ ! -d  "$PGDATA" ]; then
     mkdir -p "$PGDATA"
     chmod 700 "$PGDATA"
 else
-    rm -rf $PGDATA/*
+    rm -rf $PGDATA/lost+found
 fi
 
 chown -R postgres "$PGDATA"

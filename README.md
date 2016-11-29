@@ -1,3 +1,3 @@
 [![CircleCI](https://circleci.com/gh/gavinzhou/alpine-postgres.svg?style=svg)](https://circleci.com/gh/gavinzhou/alpine-influxdb)
-[![](https://imagelayers.io/badge/orangesys/alpine-postgres:9.5.4.svg)](https://imagelayers.io/?images=orangesys/alpine-influxdb:9.5.4 'Get your own badge on imagelayers.io')
-# alpine-postgres
+[![](https://images.microbadger.com/badges/image/orangesys/alpine-postgres.svg)](https://microbadger.com/images/orangesys/alpine-postgres "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/orangesys/alpine-postgres.svg)](https://microbadger.com/images/orangesys/alpine-postgres "Get your own version badge on microbadger.com")

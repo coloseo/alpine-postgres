@@ -1,12 +1,9 @@
 machine:
   environment:
     PROJECT_NAME: orangesys
-    CLOUDSDK_COMPUTE_ZONE: asia-east1-c
-    CLUSTER_NAME: orangesysio
-    DEBIAN_FRONTEND: noninteractive
+    CLOUDSDK_COMPUTE_ZONE: asia-northeast1-c
   pre:
-    - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
-    - sudo chmod 0755 /usr/bin/docker
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   timezone:
     Asia/Tokyo
   services:
@@ -17,21 +14,32 @@ dependencies:
     - "~/docker"
 
   pre:
+    - git tag
     - docker info
+  post:
+    - ./build.sh
+    - docker images
 
 test:
   override:
-    - ./build.sh
-    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
-    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update kubectl
-    - echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/account-auth.json
-    - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/account-auth.json
-    - sudo /opt/google-cloud-sdk/bin/gcloud config set project $PROJECT_NAME
+    - /bin/true
+
+general:
+  branches:
+    ignore:
+      - /^(?!master).*$/
 
 deployment:
-  hub:
-    branch: master
+  release:
+    tag: /^v[0-9]+(\.[0-9]+)+(-beta[0-9]+)?/
+    owner: orangesys
     commands:
+      - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+      - echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/account-auth.json
+      - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/account-auth.json
+      - sudo /opt/google-cloud-sdk/bin/gcloud config set project $PROJECT_NAME
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push orangesys/alpine-postgres
       - ./deploy.sh
+      - docker logout
+      - curl -X POST https://hooks.microbadger.com/images/orangesys/alpine-postgres/wH8-Le0MZ6COjqAHQT3HH6LZVVI=

@@ -5,6 +5,7 @@ ENV GOSU_VERSION=1.9 \
  PGDATA=/var/lib/postgresql/data
 
 RUN set -x \
+ && sed -i -e "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories \
  && apk update && apk add  --no-cache --virtual .gosu-deps dpkg gnupg openssl musl-dev make gcc curl \
  && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
  && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
